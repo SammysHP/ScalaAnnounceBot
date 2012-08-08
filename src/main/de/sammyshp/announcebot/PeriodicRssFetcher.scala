@@ -23,8 +23,14 @@ class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Un
           .toList
           .sortBy(x => x._3)
 
+        Log.d(
+          posts.size match {
+            case 0 => "No new posts"
+            case 1 => "1 new post"
+            case i => "" + i + " new posts"
+          })
+
         if (lastMessageTime > 0) {
-          Log.d("" + posts.size + " new posts")
           posts.foreach(x => callback(
               (if (x._4 == 1)
                 "Neuer Beitrag"
@@ -35,7 +41,7 @@ class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Un
               + "\": "
               + x._2))
         } else {
-          Log.d("" + posts.size + " new posts, but this was the first fetch")
+          Log.d("First fetch, no announce")
         }
 
         if (posts.size > 0)
