@@ -38,7 +38,8 @@ class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Un
           Log.d("" + posts.size + " new posts, but this was the first fetch")
         }
 
-        lastMessageTime = posts.last._3
+        if (posts.size > 0)
+          lastMessageTime = posts.last._3
       } catch {
         case e => Log.e("Cannot fetch or post RSS: " + e)
       }
