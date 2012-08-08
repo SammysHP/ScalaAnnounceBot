@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ ! -d bin ]; then
+    mkdir bin
+    cp config.xml.skel bin/config.xml
+fi
+
+scalac -classpath lib/pircbot.jar -sourcepath src/main -d bin src/main/de/sammyshp/announcebot/AnnounceBot.scala
+

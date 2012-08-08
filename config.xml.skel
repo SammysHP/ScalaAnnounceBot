@@ -1,0 +1,12 @@
+<configuration>
+    <server port="">irc.example.com</server>
+
+    <user identify="">ScalaAnnounce</user>
+
+    <feed interval="60000">http://example.com/rss</feed>
+
+    <channels>
+        <channel>#example</channel>
+        <channel>#anotherexample</channel>
+    </channels>
+</configuration>
