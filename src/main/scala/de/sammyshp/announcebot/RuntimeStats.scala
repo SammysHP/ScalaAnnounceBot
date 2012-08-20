@@ -18,8 +18,12 @@ class RuntimeStats {
   }
 
   def runtimeString = {
-    val rt = runtime / 1000;
-    "%dd %dh %dm %ds".format(rt / 86400, rt / 3600, rt / 60, rt)
+    val rt = runtime / 1000
+    val s = rt % 60
+    val m = (rt % 3600) / 60
+    val h = (rt % 86400) / 3600
+    val d = rt / 86400
+    "%dd %dh %dm %ds".format(d, h, m, s)
   }
 
   def announces = {
