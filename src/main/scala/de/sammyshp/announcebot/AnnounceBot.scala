@@ -6,6 +6,7 @@ import scala.util.control.Breaks._
 
 class AnnounceBot(config: Configuration) extends PircBot {
   var wasConnected = false
+  val stats = new RuntimeStats()
 
   def start() {
     setName(config.nick)
@@ -15,7 +16,7 @@ class AnnounceBot(config: Configuration) extends PircBot {
     onDisconnect()
 
     new PeriodicRssFetcher(config.url, config.pollInterval, 
-      (s: String) => config.channels.map(sendMessage(_, s))) start
+      (s: String) => { stats.incAnnounces(); config.channels.map(sendMessage(_, s)) }) start
   }
 
   override def onConnect() {
@@ -62,10 +63,16 @@ class AnnounceBot(config: Configuration) extends PircBot {
         sendMessage(sender, "!help      Zeige diese Hilfe an")
         sendMessage(sender, "!source    Wo gibt es den Source?")
         sendMessage(sender, "!author    Kontakt zum Entwickler des Bots")
+        sendMessage(sender, "!stats     Statistiken der aktuellen AnnounceBot-Session")
         sendMessage(sender, "!about     Informationen zum Bot")
       }
       case "!source" => sendMessage(sender, "http://github.com/SammysHP/ScalaAnnounceBot")
       case "!author" => sendMessage(sender, "Sven Karsten Greiner (SammysHP), sven@sammyshp.de")
+      case "!stats" => {
+        sendMessage(sender, "Gestartet: " + stats.startedString)
+        sendMessage(sender, "Laufzeit: " + stats.runtimeString)
+        sendMessage(sender, "Angekündigte Beiträge: " + stats.announces)
+      }
       case "!about" => {
         sendMessage(sender, "Lizenz: GPL")
         sendMessage(sender, "Unter Verwendung von PircBot (http://jibble.org/pircbot.php, GPL) und geschrieben in Scala.")
