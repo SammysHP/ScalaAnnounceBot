@@ -5,5 +5,5 @@ if [ ! -d bin ]; then
     cp config.xml.skel bin/config.xml
 fi
 
-scalac -classpath lib/pircbot.jar -sourcepath src/main -d bin src/main/de/sammyshp/announcebot/AnnounceBot.scala
+scalac -classpath lib/pircbot.jar -sourcepath src/main/scala -d bin src/main/scala/de/sammyshp/announcebot/AnnounceBot.scala
 
