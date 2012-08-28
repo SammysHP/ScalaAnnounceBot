@@ -9,4 +9,6 @@
         <channel>#example</channel>
         <channel>#anotherexample</channel>
     </channels>
+
+    <bitly user="" key="" />
 </configuration>

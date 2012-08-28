@@ -7,7 +7,9 @@ class Configuration(
     val nick: String,
     val identify: Option[String],
     val url: String,
-    val pollInterval: Long) {
+    val pollInterval: Long,
+    val bitlyUser: String,
+    val bitlyKey: String) {
 }
 
 object Configuration {
@@ -33,12 +35,15 @@ object Configuration {
 
       val url = xml \ "feed" text
 
-      val pollInterval = xml \ "feed" \ "interval" text match {
+      val pollInterval = xml \ "feed" \ "@interval" text match {
         case "" => 60000
         case i => i.toLong
       }
 
-      new Configuration(host, port, channels, nick, identify, url, pollInterval)
+      val bitlyUser = xml \ "bitly" \ "@user" text
+      val bitlyKey = xml \ "bitly" \ "@key" text
+
+      new Configuration(host, port, channels, nick, identify, url, pollInterval, bitlyUser, bitlyKey)
     } catch {
       case e => throw new ConfigurationException(e.toString)
     }

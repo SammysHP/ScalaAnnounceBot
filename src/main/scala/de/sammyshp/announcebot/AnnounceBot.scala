@@ -15,8 +15,11 @@ class AnnounceBot(config: Configuration) extends PircBot {
 
     onDisconnect()
 
+    val urlShortener = new BitlyUrlShortener(config.bitlyUser, config.bitlyKey)
+
     new PeriodicRssFetcher(config.url, config.pollInterval, 
-      (s: String) => { stats.incAnnounces(); config.channels.map(sendMessage(_, s)) }) start
+      (s: String) => { stats.incAnnounces(); config.channels.map(sendMessage(_, s)) },
+      (s: String) => { urlShortener.shorten(s) }) start
   }
 
   override def onConnect() {

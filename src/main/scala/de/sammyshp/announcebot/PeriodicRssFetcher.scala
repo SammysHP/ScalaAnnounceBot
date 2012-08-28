@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Unit) extends Thread {
+class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Unit, urlFilter: String => String) extends Thread {
   val dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
   var lastMessageTime: Long = 0;
 
@@ -39,7 +39,7 @@ class PeriodicRssFetcher(url: String, pollInterval: Long, callback: String => Un
               + " im Thema \""
               + x._1
               + "\": "
-              + x._2))
+              + urlFilter(x._2)))
         } else {
           Log.d("First fetch, no announce")
         }
