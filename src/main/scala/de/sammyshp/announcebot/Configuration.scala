@@ -8,8 +8,8 @@ class Configuration(
     val identify: Option[String],
     val url: String,
     val pollInterval: Long,
-    val bitlyUser: String,
-    val bitlyKey: String) {
+    val bitlyUser: Option[String],
+    val bitlyKey: Option[String]) {
 }
 
 object Configuration {
@@ -40,8 +40,14 @@ object Configuration {
         case i => i.toLong
       }
 
-      val bitlyUser = xml \ "bitly" \ "@user" text
-      val bitlyKey = xml \ "bitly" \ "@key" text
+      val bitlyUser = xml \ "bitly" \ "@user" text match {
+        case "" => None
+        case s => Some(s)
+      }
+      val bitlyKey = xml \ "bitly" \ "@key" text match {
+        case "" => None
+        case s => Some(s)
+      }
 
       new Configuration(host, port, channels, nick, identify, url, pollInterval, bitlyUser, bitlyKey)
     } catch {

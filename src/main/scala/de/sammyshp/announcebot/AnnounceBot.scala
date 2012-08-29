@@ -15,11 +15,16 @@ class AnnounceBot(config: Configuration) extends PircBot {
 
     onDisconnect()
 
-    val urlShortener = new BitlyUrlShortener(config.bitlyUser, config.bitlyKey)
+    val urlFilter = (config.bitlyUser, config.bitlyKey) match {
+      case (Some(user), Some(key)) => {
+        val urlShortener = new BitlyUrlShortener(user, key)
+        (s: String) => { urlShortener.shorten(s) }
+      }
+      case _ => (s: String) => s
+    }
 
     new PeriodicRssFetcher(config.url, config.pollInterval, 
-      (s: String) => { stats.incAnnounces(); config.channels.map(sendMessage(_, s)) },
-      (s: String) => { urlShortener.shorten(s) }) start
+      (s: String) => { stats.incAnnounces(); config.channels.map(sendMessage(_, s)) }, urlFilter) start
   }
 
   override def onConnect() {
@@ -36,7 +41,7 @@ class AnnounceBot(config: Configuration) extends PircBot {
 
   override def onDisconnect() {
     if (wasConnected)
-      Log.e("Lost connection to server")
+      Log.w("Lost connection to server")
 
     Log.d("Connect to server")
 
@@ -51,6 +56,7 @@ class AnnounceBot(config: Configuration) extends PircBot {
         Log.e("Cannot connect to server:\n  " + e)
         Log.d("Try reconnect in 1 minute.")
         Thread sleep 60 * 1000
+        wasConnected = false
         onDisconnect()
       }
     }
